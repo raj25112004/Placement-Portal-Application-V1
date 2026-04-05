@@ -4,6 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = "mysecret123"
 
 
 
@@ -121,15 +122,120 @@ def index():
 
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            return "No user found"
+
+        # Correct password check
+        if not check_password_hash(user.password, password):
+            return "Incorrect password"
+
+        # Company approval check
+        if user.role == 'company' and not user.is_approved:
+            return "Company registration pending approval"
+
+        # Session set
+        session['user_id'] = user.id
+        session['role'] = user.role
+
+        # Role-based redirect
+        if user.role == 'admin':
+            return redirect(url_for('admin_dashboard'))
+
+        elif user.role == 'company':
+            return redirect(url_for('company_dashboard'))
+
+        else:
+            return redirect(url_for('student_dashboard'))
+
     return render_template('login.html')
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'POST':
+
+        role = request.form.get('role')  # student / company
+        name = request.form.get('name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        # Check existing user
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            return "User already exists"
+
+        # Hash password
+        hashed_password = generate_password_hash(password)
+
+        # Create user
+        new_user = User(
+            username=name,
+            email=email,
+            password=hashed_password,
+            role=role,
+            is_approved=False if role == 'company' else True
+        )
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        # Create profile based on role
+        if role == 'student':
+            student = StudentProfile(
+                user_id=new_user.id,
+                name=name,
+                branch=request.form.get('branch'),
+                year_of_passing=request.form.get('year'),
+                cgpa=request.form.get('cgpa')
+            )
+            db.session.add(student)
+
+        elif role == 'company':
+            company = CompanyProfile(
+                user_id=new_user.id,
+                company_name=request.form.get('company_name'),
+                industry=request.form.get('industry')
+            )
+            db.session.add(company)
+
+        db.session.commit()
+
+        return redirect(url_for('login'))
+
     return render_template('register.html')
 
+@app.route('/admin/dashboard')
+def admin_dashboard():
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return redirect(url_for('login'))
+    return "Admin Dashboard"
+
+
+@app.route('/company/dashboard')
+def company_dashboard():
+    if 'user_id' not in session or session.get('role') != 'company':
+        return redirect(url_for('login'))
+    return "Company Dashboard"
+
+@app.route('/student/dashboard')
+def student_dashboard():
+    if 'user_id' not in session or session.get('role') != 'student':
+        return redirect(url_for('login'))
+    return "Student Dashboard"
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     with app.app_context():
