@@ -1,27 +1,33 @@
 <h2>Register</h2>
 
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
 
-    Name: <input type="text" name="name"><br><br>
-    Email: <input type="email" name="email"><br><br>
-    Password: <input type="password" name="password"><br><br>
+    <!-- Basic Info -->
+    Name: <input type="text" name="name" required><br><br>
+    Email: <input type="email" name="email" required><br><br>
+    Password: <input type="password" name="password" required><br><br>
 
+    <!-- Role -->
     Role:
-    <select name="role">
+    <select name="role" required>
         <option value="student">Student</option>
         <option value="company">Company</option>
     </select><br><br>
 
-    <!-- Student fields -->
+    <!-- Student Fields -->
+    <h4>Student Details</h4>
     Branch: <input type="text" name="branch"><br>
     Year: <input type="number" name="year"><br>
-    CGPA: <input type="text" name="cgpa"><br><br>
+    CGPA: <input type="text" name="cgpa"><br>
+    Resume: <input type="file" name="resume"><br><br>
 
-    <!-- Company fields -->
+    <!-- Company Fields -->
+    <h4>Company Details</h4>
     Company Name: <input type="text" name="company_name"><br>
     Industry: <input type="text" name="industry"><br><br>
 
     <button type="submit">Register</button>
 </form>
 
+<br>
 <a href="/login">Already have an account? Login</a>

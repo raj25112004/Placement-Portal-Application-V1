@@ -162,7 +162,7 @@ def login():
 def register():
     if request.method == 'POST':
 
-        role = request.form.get('role')  # student / company
+        role = request.form.get('role')
         name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
@@ -174,6 +174,14 @@ def register():
 
         # Hash password
         hashed_password = generate_password_hash(password)
+
+        # Handle resume upload
+        resume = request.files.get('resume')
+        filename = None
+
+        if resume and resume.filename != "":
+            filename = resume.filename
+            resume.save("static/resumes/" + filename)
 
         # Create user
         new_user = User(
@@ -194,7 +202,8 @@ def register():
                 name=name,
                 branch=request.form.get('branch'),
                 year_of_passing=request.form.get('year'),
-                cgpa=request.form.get('cgpa')
+                cgpa=request.form.get('cgpa'),
+                resume_link=filename   # 👈 important
             )
             db.session.add(student)
 
@@ -387,6 +396,63 @@ def update_application(app_id, status):
     db.session.commit()
 
     return redirect(url_for('company_dashboard'))
+
+@app.route('/student/dashboard')
+def student_dashboard():
+    if 'user_id' not in session or session.get('role') != 'student':
+        return redirect(url_for('login'))
+
+    # Only approved jobs
+    jobs = Job.query.filter_by(is_approved=True).all()
+
+    return render_template('student/dashboard.html', jobs=jobs)
+
+@app.route('/student/search')
+def search_jobs():
+    query = request.args.get('q')
+
+    jobs = Job.query.filter(
+        Job.title.contains(query) | Job.skills_required.contains(query)
+    ).all()
+
+    return render_template('student/dashboard.html', jobs=jobs)
+
+@app.route('/student/apply/<int:job_id>')
+def apply_job(job_id):
+    if session.get('role') != 'student':
+        return redirect(url_for('login'))
+
+    student = StudentProfile.query.filter_by(user_id=session['user_id']).first()
+
+    # Prevent duplicate (already added constraint but still safe)
+    existing = Application.query.filter_by(
+        job_id=job_id,
+        student_id=student.id
+    ).first()
+
+    if existing:
+        return "Already applied"
+
+    application = Application(
+        job_id=job_id,
+        student_id=student.id
+    )
+
+    db.session.add(application)
+    db.session.commit()
+
+    return redirect(url_for('student_dashboard'))
+
+@app.route('/student/applications')
+def student_applications():
+    if session.get('role') != 'student':
+        return redirect(url_for('login'))
+
+    student = StudentProfile.query.filter_by(user_id=session['user_id']).first()
+
+    applications = Application.query.filter_by(student_id=student.id).all()
+
+    return render_template('student/applications.html', applications=applications)
 
 
 @app.route('/logout')
