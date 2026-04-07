@@ -352,20 +352,35 @@ def deactivate_company(user_id):
 
 @app.route('/company/job/create', methods=['GET', 'POST'])
 def create_job():
-    if session.get('role') != 'company':
+    # Check login + role
+    if 'user_id' not in session or session.get('role') != 'company':
         return redirect(url_for('login'))
 
+    # Get company
+    company = CompanyProfile.query.filter_by(user_id=session['user_id']).first()
+
+    #Only approved company can create jobs
+    if not company.user.is_approved:
+        return "Company not approved by admin"
+
     if request.method == 'POST':
-        company = CompanyProfile.query.filter_by(user_id=session['user_id']).first()
+
+        title = request.form.get('title')
+        description = request.form.get('description')
+
+        # Basic validation
+        if not title or not description:
+            return "Title and Description are required"
 
         job = Job(
             company_id=company.id,
-            title=request.form.get('title'),
-            description=request.form.get('description'),
+            title=title,
+            description=description,
             skills_required=request.form.get('skills'),
             salary_range=request.form.get('salary'),
             job_type=request.form.get('job_type'),
             location=request.form.get('location'),
+
             is_approved=False
         )
 
@@ -380,8 +395,12 @@ def create_job():
 def view_applications(job_id):
     if session.get('role') != 'company':
         return redirect(url_for('login'))
-
-    applications = Application.query.filter_by(job_id=job_id).all()
+    
+    company = CompanyProfile.query.filter_by(user_id=session['user_id']).first()
+    applications = Application.query.join(Job).filter(
+    Job.company_id == company.id,
+    Job.id == job_id
+    ).all()
 
     return render_template('company/applications.html', applications=applications)
 
@@ -391,11 +410,27 @@ def update_application(app_id, status):
         return redirect(url_for('login'))
 
     application = Application.query.get(app_id)
+
+    allowed_status = ['Shortlisted', 'Interview', 'Selected', 'Rejected']
+
+    if status not in allowed_status:
+        return "Invalid status"
+
     application.status = status
+
+    #Placement logic
+    if status == "Selected":
+        if not application.placement:
+            placement = Placement(
+                application_id=application.id,
+                package="Not Disclosed"
+            )
+            db.session.add(placement)
 
     db.session.commit()
 
     return redirect(url_for('company_dashboard'))
+
 
 @app.route('/student/dashboard')
 def student_dashboard():

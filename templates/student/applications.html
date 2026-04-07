@@ -1,0 +1,16 @@
+<h2>My Applications</h2>
+
+<table border="1">
+<tr>
+    <th>Job</th>
+    <th>Status</th>
+</tr>
+
+{% for app in applications %}
+<tr>
+    <td>{{ app.job.title }}</td>
+    <td>{{ app.status }}</td>
+    <td>{{ app.applied_at }}</td>
+</tr>
+{% endfor %}
+</table>
