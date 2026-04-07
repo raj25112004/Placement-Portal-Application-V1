@@ -1,0 +1,28 @@
+<h2>Companies</h2>
+
+<form action="/admin/search/company">
+    <input type="text" name="q" placeholder="Search company">
+    <button type="submit">Search</button>
+</form>
+
+<table border="1">
+<tr>
+    <th>Name</th>
+    <th>Industry</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for c in companies %}
+<tr>
+    <td>{{ c.company_name }}</td>
+    <td>{{ c.industry }}</td>
+    <td>{{ c.user.is_approved }}</td>
+    <td>
+        <a href="/admin/company/approve/{{ c.user_id }}">Approve</a>
+        <a href="/admin/company/reject/{{ c.user_id }}">Reject</a>
+        <a href="/admin/company/deactivate/{{ c.user_id }}">Deactivate</a>
+    </td>
+</tr>
+{% endfor %}
+</table>

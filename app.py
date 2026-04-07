@@ -216,7 +216,19 @@ def register():
 def admin_dashboard():
     if 'user_id' not in session or session.get('role') != 'admin':
         return redirect(url_for('login'))
-    return "Admin Dashboard"
+
+    total_students = StudentProfile.query.count()
+    total_companies = CompanyProfile.query.count()
+    total_jobs = Job.query.count()
+    total_applications = Application.query.count()
+
+    return render_template(
+        'admin/dashboard.html',
+        students=total_students,
+        companies=total_companies,
+        jobs=total_jobs,
+        applications=total_applications
+    )
 
 
 @app.route('/company/dashboard')
@@ -230,6 +242,97 @@ def student_dashboard():
     if 'user_id' not in session or session.get('role') != 'student':
         return redirect(url_for('login'))
     return "Student Dashboard"
+
+
+@app.route('/admin/companies')
+def view_companies():
+    if session.get('role') != 'admin':
+        return redirect(url_for('login'))
+
+    companies = CompanyProfile.query.all()
+    return render_template('admin/companies.html', companies=companies)
+
+
+@app.route('/admin/company/approve/<int:user_id>')
+def approve_company(user_id):
+    user = User.query.get(user_id)
+    user.is_approved = True
+    db.session.commit()
+    return redirect(url_for('view_companies'))
+
+
+@app.route('/admin/company/reject/<int:user_id>')
+def reject_company(user_id):
+    user = User.query.get(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    return redirect(url_for('view_companies'))
+
+@app.route('/admin/jobs')
+def view_jobs():
+    if session.get('role') != 'admin':
+        return redirect(url_for('login'))
+
+    jobs = Job.query.all()
+    return render_template('admin/jobs.html', jobs=jobs)
+
+
+@app.route('/admin/job/approve/<int:job_id>')
+def approve_job(job_id):
+    job = Job.query.get(job_id)
+    job.is_approved = True
+    db.session.commit()
+    return redirect(url_for('view_jobs'))
+
+
+@app.route('/admin/job/reject/<int:job_id>')
+def reject_job(job_id):
+    job = Job.query.get(job_id)
+    db.session.delete(job)
+    db.session.commit()
+    return redirect(url_for('view_jobs'))
+
+@app.route('/admin/students')
+def view_students():
+    if session.get('role') != 'admin':
+        return redirect(url_for('login'))
+
+    students = StudentProfile.query.all()
+    return render_template('admin/students.html', students=students)
+
+@app.route('/admin/search/student')
+def search_student():
+    query = request.args.get('q')
+
+    students = StudentProfile.query.filter(
+        StudentProfile.name.contains(query)
+    ).all()
+
+    return render_template('admin/students.html', students=students)
+
+@app.route('/admin/search/company')
+def search_company():
+    query = request.args.get('q')
+
+    companies = CompanyProfile.query.filter(
+        CompanyProfile.company_name.contains(query)
+    ).all()
+
+    return render_template('admin/companies.html', companies=companies)
+
+@app.route('/admin/student/deactivate/<int:user_id>')
+def deactivate_student(user_id):
+    user = User.query.get(user_id)
+    user.is_active = False
+    db.session.commit()
+    return redirect(url_for('view_students'))
+
+@app.route('/admin/company/deactivate/<int:user_id>')
+def deactivate_company(user_id):
+    user = User.query.get(user_id)
+    user.is_active = False
+    db.session.commit()
+    return redirect(url_for('view_companies'))
 
 
 @app.route('/logout')

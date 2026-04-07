@@ -1,0 +1,22 @@
+<h2>Jobs</h2>
+
+<table border="1">
+<tr>
+    <th>Title</th>
+    <th>Company</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for j in jobs %}
+<tr>
+    <td>{{ j.title }}</td>
+    <td>{{ j.company.company_name }}</td>
+    <td>{{ j.is_approved }}</td>
+    <td>
+        <a href="/admin/job/approve/{{ j.id }}">Approve</a>
+        <a href="/admin/job/reject/{{ j.id }}">Reject</a>
+    </td>
+</tr>
+{% endfor %}
+</table>
