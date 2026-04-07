@@ -235,7 +235,13 @@ def admin_dashboard():
 def company_dashboard():
     if 'user_id' not in session or session.get('role') != 'company':
         return redirect(url_for('login'))
-    return "Company Dashboard"
+
+    user_id = session['user_id']
+    company = CompanyProfile.query.filter_by(user_id=user_id).first()
+
+    jobs = Job.query.filter_by(company_id=company.id).all()
+
+    return render_template('company/dashboard.html', jobs=jobs)
 
 @app.route('/student/dashboard')
 def student_dashboard():
@@ -333,6 +339,54 @@ def deactivate_company(user_id):
     user.is_active = False
     db.session.commit()
     return redirect(url_for('view_companies'))
+
+
+@app.route('/company/job/create', methods=['GET', 'POST'])
+def create_job():
+    if session.get('role') != 'company':
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        company = CompanyProfile.query.filter_by(user_id=session['user_id']).first()
+
+        job = Job(
+            company_id=company.id,
+            title=request.form.get('title'),
+            description=request.form.get('description'),
+            skills_required=request.form.get('skills'),
+            salary_range=request.form.get('salary'),
+            job_type=request.form.get('job_type'),
+            location=request.form.get('location'),
+            is_approved=False
+        )
+
+        db.session.add(job)
+        db.session.commit()
+
+        return redirect(url_for('company_dashboard'))
+
+    return render_template('company/create_job.html')
+
+@app.route('/company/job/applications/<int:job_id>')
+def view_applications(job_id):
+    if session.get('role') != 'company':
+        return redirect(url_for('login'))
+
+    applications = Application.query.filter_by(job_id=job_id).all()
+
+    return render_template('company/applications.html', applications=applications)
+
+@app.route('/company/application/update/<int:app_id>/<status>')
+def update_application(app_id, status):
+    if session.get('role') != 'company':
+        return redirect(url_for('login'))
+
+    application = Application.query.get(app_id)
+    application.status = status
+
+    db.session.commit()
+
+    return redirect(url_for('company_dashboard'))
 
 
 @app.route('/logout')
