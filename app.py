@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from flask import jsonify
+
 
 app = Flask(__name__)
 app.secret_key = "mysecret123"
@@ -252,11 +254,7 @@ def company_dashboard():
 
     return render_template('company/dashboard.html', jobs=jobs)
 
-@app.route('/student/dashboard')
-def student_dashboard():
-    if 'user_id' not in session or session.get('role') != 'student':
-        return redirect(url_for('login'))
-    return "Student Dashboard"
+
 
 
 @app.route('/admin/companies')
@@ -437,7 +435,6 @@ def student_dashboard():
     if 'user_id' not in session or session.get('role') != 'student':
         return redirect(url_for('login'))
 
-    # Only approved jobs
     jobs = Job.query.filter_by(is_approved=True).all()
 
     return render_template('student/dashboard.html', jobs=jobs)
@@ -494,6 +491,109 @@ def student_applications():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+
+# ----------- API ROUTES START -----------
+
+@app.route('/api/students', methods=['GET'])
+def api_students():
+    students = StudentProfile.query.all()
+
+    result = []
+    for s in students:
+        result.append({
+            "id": s.id,
+            "name": s.name,
+            "branch": s.branch,
+            "cgpa": s.cgpa
+        })
+
+    return jsonify(result)
+
+@app.route('/api/companies', methods=['GET'])
+def api_companies():
+    companies = CompanyProfile.query.all()
+
+    result = []
+    for c in companies:
+        result.append({
+            "id": c.id,
+            "name": c.company_name,
+            "industry": c.industry
+        })
+
+    return jsonify(result)
+
+@app.route('/api/jobs', methods=['GET'])
+def api_jobs():
+    jobs = Job.query.filter_by(is_approved=True).all()
+
+    result = []
+    for j in jobs:
+        result.append({
+            "id": j.id,
+            "title": j.title,
+            "company": j.company.company_name,
+            "location": j.location,
+            "salary": j.salary_range
+        })
+
+    return jsonify(result)
+
+@app.route('/api/applications', methods=['GET'])
+def api_applications():
+    applications = Application.query.all()
+
+    result = []
+    for a in applications:
+        result.append({
+            "id": a.id,
+            "student": a.student.name,
+            "job": a.job.title,
+            "status": a.status
+        })
+
+    return jsonify(result)
+
+@app.route('/api/job', methods=['POST'])
+def api_create_job():
+    data = request.get_json()
+
+    job = Job(
+        company_id=data['company_id'],
+        title=data['title'],
+        description=data['description'],
+        skills_required=data.get('skills'),
+        salary_range=data.get('salary'),
+        location=data.get('location'),
+        is_approved=False
+    )
+
+    db.session.add(job)
+    db.session.commit()
+
+    return jsonify({"message": "Job created"}), 201
+
+
+@app.route('/api/application/<int:id>', methods=['PUT'])
+def api_update_application(id):
+    data = request.get_json()
+
+    application = Application.query.get(id)
+    application.status = data.get('status')
+
+    db.session.commit()
+
+    return jsonify({"message": "Application updated"})
+
+@app.route('/api/job/<int:id>', methods=['DELETE'])
+def api_delete_job(id):
+    job = Job.query.get(id)
+
+    db.session.delete(job)
+    db.session.commit()
+
+    return jsonify({"message": "Job deleted"})
 
 if __name__ == '__main__':
     with app.app_context():
