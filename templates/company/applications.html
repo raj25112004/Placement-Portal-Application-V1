@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Applications</h2>
+
+<div class="card">
+
+<table>
+    <tr>
+        <th>Student Name</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for app in applications %}
+    <tr>
+        <td>{{ app.student.name }}</td>
+
+        <td>
+            {% if app.status == "Selected" %}
+                <span class="status-approved">Selected</span>
+            {% elif app.status == "Rejected" %}
+                <span class="status-rejected">Rejected</span>
+            {% else %}
+                <span class="status-pending">{{ app.status }}</span>
+            {% endif %}
+        </td>
+
+        <td>
+            <a href="/company/application/update/{{ app.id }}/Shortlisted" class="button-link">Shortlist</a>
+            <a href="/company/application/update/{{ app.id }}/Interview" class="button-link">Interview</a>
+            <a href="/company/application/update/{{ app.id }}/Selected" class="button-link">Select</a>
+            <a href="/company/application/update/{{ app.id }}/Rejected" class="button-link">Reject</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</div>
+
+{% endblock %}

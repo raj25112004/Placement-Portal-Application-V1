@@ -225,34 +225,49 @@ def register():
 
 @app.route('/admin/dashboard')
 def admin_dashboard():
-    if 'user_id' not in session or session.get('role') != 'admin':
+    if session.get('role') != 'admin':
         return redirect(url_for('login'))
 
-    total_students = StudentProfile.query.count()
-    total_companies = CompanyProfile.query.count()
-    total_jobs = Job.query.count()
-    total_applications = Application.query.count()
+    students = StudentProfile.query.count()
+    companies = CompanyProfile.query.count()
+    jobs = Job.query.count()
+    applications = Application.query.count()
+
+    try:
+        placements = Placement.query.count()
+    except:
+        placements = 0
 
     return render_template(
         'admin/dashboard.html',
-        students=total_students,
-        companies=total_companies,
-        jobs=total_jobs,
-        applications=total_applications
+        students=students,
+        companies=companies,
+        jobs=jobs,
+        applications=applications,
+        placements=placements
     )
-
 
 @app.route('/company/dashboard')
 def company_dashboard():
-    if 'user_id' not in session or session.get('role') != 'company':
+    if session.get('role') != 'company':
         return redirect(url_for('login'))
 
-    user_id = session['user_id']
-    company = CompanyProfile.query.filter_by(user_id=user_id).first()
-
+    company = CompanyProfile.query.filter_by(user_id=session['user_id']).first()
     jobs = Job.query.filter_by(company_id=company.id).all()
 
-    return render_template('company/dashboard.html', jobs=jobs)
+    titles = []
+    counts = []
+
+    for job in jobs:
+        titles.append(job.title)
+        counts.append(len(job.applications))
+
+    return render_template(
+        'company/dashboard.html',
+        jobs=jobs,
+        titles=titles,
+        counts=counts
+    )
 
 
 
@@ -432,12 +447,30 @@ def update_application(app_id, status):
 
 @app.route('/student/dashboard')
 def student_dashboard():
-    if 'user_id' not in session or session.get('role') != 'student':
+    if session.get('role') != 'student':
         return redirect(url_for('login'))
+
+    student = StudentProfile.query.filter_by(user_id=session['user_id']).first()
+    applications = Application.query.filter_by(student_id=student.id).all()
 
     jobs = Job.query.filter_by(is_approved=True).all()
 
-    return render_template('student/dashboard.html', jobs=jobs)
+    status_count = {
+        "Applied": 0,
+        "Shortlisted": 0,
+        "Selected": 0,
+        "Rejected": 0
+    }
+
+    for app in applications:
+        if app.status in status_count:
+            status_count[app.status] += 1
+
+    return render_template(
+        'student/dashboard.html',
+        jobs=jobs,
+        status_data=status_count
+    )
 
 @app.route('/student/search')
 def search_jobs():

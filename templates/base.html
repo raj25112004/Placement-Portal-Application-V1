@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Placement Portal</title>
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Chart.js (for future charts) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a href="/">Home</a>
+
+        {% if session.get('role') == 'admin' %}
+            <a href="/admin/dashboard">Dashboard</a>
+            <a href="/admin/companies">Companies</a>
+            <a href="/admin/jobs">Jobs</a>
+            <a href="/admin/students">Students</a>
+
+        {% elif session.get('role') == 'company' %}
+            <a href="/company/dashboard">Dashboard</a>
+            <a href="/company/job/create">Post Job</a>
+
+        {% elif session.get('role') == 'student' %}
+            <a href="/student/dashboard">Dashboard</a>
+            <a href="/student/applications">My Applications</a>
+        {% endif %}
+
+        {% if session.get('user_id') %}
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        {% endif %}
+    </nav>
+
+    <!-- PAGE CONTENT -->
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

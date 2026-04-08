@@ -1,11 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h2>Students</h2>
 
-<form action="/admin/search/student">
-    <input type="text" name="q" placeholder="Search student">
-    <button type="submit">Search</button>
-</form>
-
-<table border="1">
+<table>
 <tr>
     <th>Name</th>
     <th>Branch</th>
@@ -18,9 +17,14 @@
     <td>{{ s.name }}</td>
     <td>{{ s.branch }}</td>
     <td>{{ s.cgpa }}</td>
+
     <td>
-        <a href="/admin/student/deactivate/{{ s.user_id }}">Deactivate</a>
+        <a href="/admin/student/deactivate/{{ s.user_id }}" class="button-link">
+            Deactivate
+        </a>
     </td>
 </tr>
 {% endfor %}
 </table>
+
+{% endblock %}

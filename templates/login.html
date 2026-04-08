@@ -1,10 +1,28 @@
-<h2>Login</h2>
+{% extends 'base.html' %}
 
-<form method="POST">
-    Email: <input type="email" name="email"><br><br>
-    Password: <input type="password" name="password"><br><br>
+{% block content %}
 
-    <button type="submit">Login</button>
-</form>
+<div class="card">
 
-<a href="/register">Don't have an account? Register</a>
+    <h2>Login</h2>
+
+    <form method="POST">
+
+        <label>Email:</label>
+        <input type="email" name="email" required>
+
+        <label>Password:</label>
+        <input type="password" name="password" required>
+
+        <button type="submit">Login</button>
+
+    </form>
+
+    <br>
+
+    <p>Don't have an account?</p>
+    <a href="/register" class="button-link">Register</a>
+
+</div>
+
+{% endblock %}

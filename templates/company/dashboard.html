@@ -1,21 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h2>Company Dashboard</h2>
 
-<a href="/company/job/create">Post New Job</a><br><br>
+<div class="card">
+    <a href="/company/job/create" class="button-link">Post New Job</a>
+</div>
 
-<table border="1">
-<tr>
-    <th>Title</th>
-    <th>Status</th>
-    <th>Action</th>
-</tr>
+<div class="card">
+    <h3>Your Job Listings</h3>
 
-{% for job in jobs %}
-<tr>
-    <td>{{ job.title }}</td>
-    <td>{{ job.is_approved }}</td>
-    <td>
-        <a href="/company/job/applications/{{ job.id }}">View Applications</a>
-    </td>
-</tr>
-{% endfor %}
-</table>
+    <table>
+        <tr>
+            <th>Job Title</th>
+            <th>Status</th>
+            <th>Applications</th>
+        </tr>
+
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.title }}</td>
+
+            <td>
+                {% if job.is_approved %}
+                    <span class="status-approved">Approved</span>
+                {% else %}
+                    <span class="status-pending">Pending</span>
+                {% endif %}
+            </td>
+
+            <td>
+                <a href="/company/job/applications/{{ job.id }}" class="button-link">
+                    View Applications
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<div class="card">
+    <canvas id="companyChart"></canvas>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const labels = JSON.parse('{{ titles | tojson }}');
+    const data = JSON.parse('{{ counts | tojson }}');
+
+    new Chart(document.getElementById('companyChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Applications per Job',
+                data: data
+            }]
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

@@ -1,11 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h2>Admin Dashboard</h2>
 
-<p>Total Students: {{ students }}</p>
-<p>Total Companies: {{ companies }}</p>
-<p>Total Jobs: {{ jobs }}</p>
-<p>Total Applications: {{ applications }}</p>
+<div class="card">
+    <p><b>Total Students:</b> {{ students }}</p>
+    <p><b>Total Companies:</b> {{ companies }}</p>
+    <p><b>Total Jobs:</b> {{ jobs }}</p>
+    <p><b>Total Applications:</b> {{ applications }}</p>
+</div>
 
-<a href="/admin/companies">Manage Companies</a><br>
-<a href="/admin/jobs">Manage Jobs</a><br>
-<a href="/admin/students">View Students</a><br>
-<a href="/logout">Logout</a>
+<div class="card">
+    <a href="/admin/companies" class="button-link">Manage Companies</a>
+    <a href="/admin/jobs" class="button-link">Manage Jobs</a>
+    <a href="/admin/students" class="button-link">View Students</a>
+</div>
+<div class="card">
+    <canvas id="adminChart"></canvas>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const chartData = JSON.parse('{{ [jobs, applications, placements] | tojson }}');
+
+    new Chart(document.getElementById('adminChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Jobs', 'Applications', 'Placements'],
+            datasets: [{
+                label: 'System Overview',
+                data: chartData
+            }]
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

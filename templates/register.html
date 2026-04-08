@@ -1,33 +1,69 @@
-<h2>Register</h2>
+{% extends 'base.html' %}
 
-<form method="POST" enctype="multipart/form-data">
+{% block content %}
 
-    <!-- Basic Info -->
-    Name: <input type="text" name="name" required><br><br>
-    Email: <input type="email" name="email" required><br><br>
-    Password: <input type="password" name="password" required><br><br>
+<div class="card">
 
-    <!-- Role -->
-    Role:
-    <select name="role" required>
-        <option value="student">Student</option>
-        <option value="company">Company</option>
-    </select><br><br>
+    <h2>Register</h2>
 
-    <!-- Student Fields -->
-    <h4>Student Details</h4>
-    Branch: <input type="text" name="branch"><br>
-    Year: <input type="number" name="year"><br>
-    CGPA: <input type="text" name="cgpa"><br>
-    Resume: <input type="file" name="resume"><br><br>
+    <form method="POST" enctype="multipart/form-data">
 
-    <!-- Company Fields -->
-    <h4>Company Details</h4>
-    Company Name: <input type="text" name="company_name"><br>
-    Industry: <input type="text" name="industry"><br><br>
+        <!-- Basic Info -->
+        <label>Name:</label>
+        <input type="text" name="name" required>
 
-    <button type="submit">Register</button>
-</form>
+        <label>Email:</label>
+        <input type="email" name="email" required>
 
-<br>
-<a href="/login">Already have an account? Login</a>
+        <label>Password:</label>
+        <input type="password" name="password" required>
+
+        <!-- Role -->
+        <label>Role:</label>
+        <select name="role" required>
+            <option value="student">Student</option>
+            <option value="company">Company</option>
+        </select>
+
+        <hr>
+
+        <!-- Student Section -->
+        <h3>Student Details</h3>
+
+        <label>Branch:</label>
+        <input type="text" name="branch">
+
+        <label>Year of Passing:</label>
+        <input type="number" name="year">
+
+        <label>CGPA:</label>
+        <input type="text" name="cgpa">
+
+        <label>Resume:</label>
+        <input type="file" name="resume">
+
+        <hr>
+
+        <!-- Company Section -->
+        <h3>Company Details</h3>
+
+        <label>Company Name:</label>
+        <input type="text" name="company_name">
+
+        <label>Industry:</label>
+        <input type="text" name="industry">
+
+        <br>
+
+        <button type="submit">Register</button>
+
+    </form>
+
+    <br>
+
+    <p>Already have an account?</p>
+    <a href="/login" class="button-link">Login</a>
+
+</div>
+
+{% endblock %}

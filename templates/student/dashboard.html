@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>My Applications</h2>
+
+<div class="card">
+
+<table>
+    <tr>
+        <th>Job Title</th>
+        <th>Status</th>
+        <th>Date</th>
+    </tr>
+
+    {% for app in applications %}
+    <tr>
+        <td>{{ app.job.title }}</td>
+
+        <td>
+            {% if app.status == "Selected" %}
+                <span class="status-approved">Selected</span>
+            {% elif app.status == "Rejected" %}
+                <span class="status-rejected">Rejected</span>
+            {% elif app.status == "Shortlisted" %}
+                <span class="status-approved">Shortlisted</span>
+            {% else %}
+                <span class="status-pending">{{ app.status }}</span>
+            {% endif %}
+        </td>
+
+        <td>{{ app.applied_at }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</div>
+<div class="card">
+    <canvas id="studentChart"></canvas>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const labels = JSON.parse('{{ status_data.keys() | list | tojson }}');
+    const data = JSON.parse('{{ status_data.values() | list | tojson }}');
+
+    new Chart(document.getElementById('studentChart'), {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data
+            }]
+        }
+    });
+
+});
+</script>
+
+{% endblock %}

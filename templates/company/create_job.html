@@ -1,12 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h2>Create Job</h2>
 
-<form method="POST">
-    Title: <input type="text" name="title"><br><br>
-    Description: <input type="text" name="description"><br><br>
-    Skills: <input type="text" name="skills"><br><br>
-    Salary: <input type="text" name="salary"><br><br>
-    Job Type: <input type="text" name="job_type"><br><br>
-    Location: <input type="text" name="location"><br><br>
+<div class="card">
 
+<form method="POST">
+
+    <label>Job Title:</label>
+    <input type="text" name="title" required>
+
+    <label>Description:</label>
+    <input type="text" name="description" required>
+
+    <label>Skills Required:</label>
+    <input type="text" name="skills">
+
+    <label>Salary Range:</label>
+    <input type="text" name="salary">
+
+    <label>Job Type:</label>
+    <input type="text" name="job_type">
+
+    <label>Location:</label>
+    <input type="text" name="location">
+
+    <br>
     <button type="submit">Create Job</button>
+
 </form>
+
+</div>
+
+{% endblock %}

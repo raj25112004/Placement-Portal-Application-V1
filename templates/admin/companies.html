@@ -1,11 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h2>Companies</h2>
 
-<form action="/admin/search/company">
-    <input type="text" name="q" placeholder="Search company">
-    <button type="submit">Search</button>
-</form>
-
-<table border="1">
+<table>
 <tr>
     <th>Name</th>
     <th>Industry</th>
@@ -17,12 +16,22 @@
 <tr>
     <td>{{ c.company_name }}</td>
     <td>{{ c.industry }}</td>
-    <td>{{ c.user.is_approved }}</td>
+
     <td>
-        <a href="/admin/company/approve/{{ c.user_id }}">Approve</a>
-        <a href="/admin/company/reject/{{ c.user_id }}">Reject</a>
-        <a href="/admin/company/deactivate/{{ c.user_id }}">Deactivate</a>
+        {% if c.user.is_approved %}
+            <span class="status-approved">Approved</span>
+        {% else %}
+            <span class="status-pending">Pending</span>
+        {% endif %}
+    </td>
+
+    <td>
+        <a href="/admin/company/approve/{{ c.user_id }}" class="button-link">Approve</a>
+        <a href="/admin/company/reject/{{ c.user_id }}" class="button-link">Reject</a>
+        <a href="/admin/company/deactivate/{{ c.user_id }}" class="button-link">Deactivate</a>
     </td>
 </tr>
 {% endfor %}
 </table>
+
+{% endblock %}

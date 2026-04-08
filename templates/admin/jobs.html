@@ -1,6 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 <h2>Jobs</h2>
 
-<table border="1">
+<table>
 <tr>
     <th>Title</th>
     <th>Company</th>
@@ -12,11 +16,21 @@
 <tr>
     <td>{{ j.title }}</td>
     <td>{{ j.company.company_name }}</td>
-    <td>{{ j.is_approved }}</td>
+
     <td>
-        <a href="/admin/job/approve/{{ j.id }}">Approve</a>
-        <a href="/admin/job/reject/{{ j.id }}">Reject</a>
+        {% if j.is_approved %}
+            <span class="status-approved">Approved</span>
+        {% else %}
+            <span class="status-pending">Pending</span>
+        {% endif %}
+    </td>
+
+    <td>
+        <a href="/admin/job/approve/{{ j.id }}" class="button-link">Approve</a>
+        <a href="/admin/job/reject/{{ j.id }}" class="button-link">Reject</a>
     </td>
 </tr>
 {% endfor %}
 </table>
+
+{% endblock %}

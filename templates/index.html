@@ -1,4 +1,42 @@
-<h1>Placement Portal</h1>
+{% extends 'base.html' %}
 
-<a href="/login">Login</a><br>
-<a href="/register">Register</a>
+{% block content %}
+
+<div class="card">
+
+    <h2>Welcome to Placement Portal</h2>
+
+    <p>
+        This platform helps students find jobs, companies hire talent,
+        and administrators manage the placement process efficiently.
+    </p>
+
+    <hr>
+
+    {% if not session.get('user_id') %}
+        <h3>Get Started</h3>
+
+        <a href="/login" class="button-link">Login</a>
+        <a href="/register" class="button-link">Register</a>
+
+    {% else %}
+
+        {% if session.get('role') == 'admin' %}
+            <h3>Go to Admin Dashboard</h3>
+            <a href="/admin/dashboard" class="button-link">Admin Dashboard</a>
+
+        {% elif session.get('role') == 'company' %}
+            <h3>Go to Company Dashboard</h3>
+            <a href="/company/dashboard" class="button-link">Company Dashboard</a>
+
+        {% elif session.get('role') == 'student' %}
+            <h3>Go to Student Dashboard</h3>
+            <a href="/student/dashboard" class="button-link">Student Dashboard</a>
+
+        {% endif %}
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

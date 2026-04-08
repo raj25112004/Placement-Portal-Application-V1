@@ -1,16 +1,44 @@
 <h2>My Applications</h2>
 
-<table border="1">
-<tr>
-    <th>Job</th>
-    <th>Status</th>
-</tr>
+{% extends 'base.html' %}
 
-{% for app in applications %}
-<tr>
-    <td>{{ app.job.title }}</td>
-    <td>{{ app.status }}</td>
-    <td>{{ app.applied_at }}</td>
-</tr>
-{% endfor %}
-</table>
+{% block content %}
+
+<h2>Student Dashboard</h2>
+
+<div class="card">
+
+    <h3>Available Jobs</h3>
+
+    <table>
+        <tr>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Action</th>
+        </tr>
+
+        {% for job in jobs %}
+        <tr>
+            <td>{{ job.title }}</td>
+            <td>{{ job.company.company_name }}</td>
+
+            <td>
+                <a href="/student/apply/{{ job.id }}" class="button-link">
+                    Apply
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+<br>
+
+<div class="card">
+    <a href="/student/applications" class="button-link">
+        View My Applications
+    </a>
+</div>
+
+{% endblock %}
