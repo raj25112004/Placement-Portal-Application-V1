@@ -28,17 +28,17 @@
 
                 <ul class="navbar-nav me-auto">
 
-                    {% if session.get('role') == 'admin' %}
+                    {% if current_user.role == 'admin' %}
                         <li class="nav-item"><a class="nav-link" href="/admin/dashboard">Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/companies">Companies</a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/jobs">Jobs</a></li>
                         <li class="nav-item"><a class="nav-link" href="/admin/students">Students</a></li>
 
-                    {% elif session.get('role') == 'company' %}
+                    {% elif current_user.role == 'company' %}
                         <li class="nav-item"><a class="nav-link" href="/company/dashboard">Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="/company/job/create">Post Job</a></li>
 
-                    {% elif session.get('role') == 'student' %}
+                    {% elif current_user.role == 'student' %}
                         <li class="nav-item"><a class="nav-link" href="/student/dashboard">Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="/student/applications">Applications</a></li>
                     {% endif %}
@@ -47,7 +47,7 @@
 
                 <ul class="navbar-nav">
 
-                    {% if session.get('user_id') %}
+                    {% if current_user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
                     {% else %}
                         <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>

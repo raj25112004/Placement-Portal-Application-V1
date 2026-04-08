@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask import jsonify
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 
 app = Flask(__name__)
@@ -14,13 +15,16 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///placement_portal.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 # ------------------------------------------
 # MODELS
 # ------------------------------------------
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -114,6 +118,10 @@ class Placement(db.Model):
 
     application = db.relationship('Application', backref='placement', uselist=False)
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 # ------------------------------------------
 # APP START
 # ------------------------------------------
@@ -151,8 +159,7 @@ def login():
         if user.role == 'company' and not user.is_approved:
             return "Company registration pending approval"
 
-        session['user_id'] = user.id
-        session['role'] = user.role
+        login_user(user)
 
         if user.role == 'admin':
             return redirect(url_for('admin_dashboard'))
@@ -250,8 +257,9 @@ def register():
     return render_template('register.html')
 
 @app.route('/admin/dashboard')
+@login_required
 def admin_dashboard():
-    if session.get('role') != 'admin':
+    if current_user.role != 'admin':
         return redirect(url_for('login'))
 
     students = StudentProfile.query.count()
@@ -274,11 +282,12 @@ def admin_dashboard():
     )
 
 @app.route('/company/dashboard')
+@login_required
 def company_dashboard():
-    if session.get('role') != 'company':
+    if current_user.role != 'company':
         return redirect(url_for('login'))
 
-    company = CompanyProfile.query.filter_by(user_id=session['user_id']).first()
+    company = CompanyProfile.query.filter_by(user_id=current_user.id).first()
     jobs = Job.query.filter_by(company_id=company.id).all()
 
     titles = []
@@ -299,8 +308,9 @@ def company_dashboard():
 
 
 @app.route('/admin/companies')
+@login_required
 def view_companies():
-    if session.get('role') != 'admin':
+    if current_user.role != 'admin':
         return redirect(url_for('login'))
 
     companies = CompanyProfile.query.all()
@@ -308,6 +318,7 @@ def view_companies():
 
 
 @app.route('/admin/company/approve/<int:user_id>')
+@login_required
 def approve_company(user_id):
     user = User.query.get(user_id)
     user.is_approved = True
@@ -316,6 +327,7 @@ def approve_company(user_id):
 
 
 @app.route('/admin/company/reject/<int:user_id>')
+@login_required
 def reject_company(user_id):
     user = User.query.get(user_id)
     db.session.delete(user)
@@ -323,8 +335,9 @@ def reject_company(user_id):
     return redirect(url_for('view_companies'))
 
 @app.route('/admin/jobs')
+@login_required
 def view_jobs():
-    if session.get('role') != 'admin':
+    if current_user.role != 'admin':
         return redirect(url_for('login'))
 
     jobs = Job.query.all()
@@ -332,6 +345,7 @@ def view_jobs():
 
 
 @app.route('/admin/job/approve/<int:job_id>')
+@login_required
 def approve_job(job_id):
     job = Job.query.get(job_id)
     job.is_approved = True
@@ -340,6 +354,7 @@ def approve_job(job_id):
 
 
 @app.route('/admin/job/reject/<int:job_id>')
+@login_required
 def reject_job(job_id):
     job = Job.query.get(job_id)
     db.session.delete(job)
@@ -347,14 +362,16 @@ def reject_job(job_id):
     return redirect(url_for('view_jobs'))
 
 @app.route('/admin/students')
+@login_required
 def view_students():
-    if session.get('role') != 'admin':
+    if current_user.role != 'admin':
         return redirect(url_for('login'))
 
     students = StudentProfile.query.all()
     return render_template('admin/students.html', students=students)
 
 @app.route('/admin/search/student')
+@login_required
 def search_student():
     query = request.args.get('q')
 
@@ -365,6 +382,7 @@ def search_student():
     return render_template('admin/students.html', students=students)
 
 @app.route('/admin/search/company')
+@login_required
 def search_company():
     query = request.args.get('q')
 
@@ -375,6 +393,7 @@ def search_company():
     return render_template('admin/companies.html', companies=companies)
 
 @app.route('/admin/student/deactivate/<int:user_id>')
+@login_required
 def deactivate_student(user_id):
     user = User.query.get(user_id)
     user.is_active = False
@@ -382,6 +401,7 @@ def deactivate_student(user_id):
     return redirect(url_for('view_students'))
 
 @app.route('/admin/company/deactivate/<int:user_id>')
+@login_required
 def deactivate_company(user_id):
     user = User.query.get(user_id)
     user.is_active = False
@@ -390,12 +410,13 @@ def deactivate_company(user_id):
 
 
 @app.route('/company/job/create', methods=['GET', 'POST'])
+@login_required
 def create_job():
 
-    if 'user_id' not in session or session.get('role') != 'company':
+    if current_user.role != 'company':
         return redirect(url_for('login'))
 
-    company = CompanyProfile.query.filter_by(user_id=session['user_id']).first()
+    company = CompanyProfile.query.filter_by(user_id=current_user.id).first()
 
     if not company:
         return "Invalid company"
@@ -444,11 +465,12 @@ def create_job():
 
 
 @app.route('/company/job/applications/<int:job_id>')
+@login_required
 def view_applications(job_id):
-    if session.get('role') != 'company':
+    if current_user.role != 'company':
         return redirect(url_for('login'))
     
-    company = CompanyProfile.query.filter_by(user_id=session['user_id']).first()
+    company = CompanyProfile.query.filter_by(user_id=current_user.id).first()
     applications = Application.query.join(Job).filter(
     Job.company_id == company.id,
     Job.id == job_id
@@ -457,8 +479,9 @@ def view_applications(job_id):
     return render_template('company/applications.html', applications=applications)
 
 @app.route('/company/application/update/<int:app_id>/<status>')
+@login_required
 def update_application(app_id, status):
-    if session.get('role') != 'company':
+    if current_user.role != 'company':
         return redirect(url_for('login'))
 
     application = Application.query.get(app_id)
@@ -485,11 +508,13 @@ def update_application(app_id, status):
 
 
 @app.route('/student/dashboard')
+@login_required
 def student_dashboard():
-    if session.get('role') != 'student':
+
+    if current_user.role != 'student':
         return redirect(url_for('login'))
 
-    student = StudentProfile.query.filter_by(user_id=session['user_id']).first()
+    student = StudentProfile.query.filter_by(user_id=current_user.id).first()
     applications = Application.query.filter_by(student_id=student.id).all()
 
     jobs = Job.query.filter_by(is_approved=True).all()
@@ -512,6 +537,7 @@ def student_dashboard():
     )
 
 @app.route('/student/search')
+@login_required
 def search_jobs():
     query = request.args.get('q')
 
@@ -522,12 +548,13 @@ def search_jobs():
     return render_template('student/dashboard.html', jobs=jobs)
 
 @app.route('/student/apply/<int:job_id>')
+@login_required
 def apply_job(job_id):
 
-    if 'user_id' not in session or session.get('role') != 'student':
+    if current_user.role != 'student':
         return redirect(url_for('login'))
 
-    student = StudentProfile.query.filter_by(user_id=session['user_id']).first()
+    student = StudentProfile.query.filter_by(user_id=current_user.id).first()
 
     if not student:
         return "Invalid student"
@@ -559,20 +586,22 @@ def apply_job(job_id):
     return redirect(url_for('student_dashboard'))
 
 @app.route('/student/applications')
+@login_required
 def student_applications():
-    if session.get('role') != 'student':
+
+    if current_user.role != 'student':
         return redirect(url_for('login'))
 
-    student = StudentProfile.query.filter_by(user_id=session['user_id']).first()
-
+    student = StudentProfile.query.filter_by(user_id=current_user.id).first()
     applications = Application.query.filter_by(student_id=student.id).all()
 
     return render_template('student/applications.html', applications=applications)
 
 
 @app.route('/logout')
+@login_required
 def logout():
-    session.clear()
+    logout_user()
     return redirect(url_for('login'))
 
 
@@ -687,7 +716,7 @@ if __name__ == '__main__':
             admin_user = User(
                 username='admin',
                 email='admin@gmail.com',
-                password='admin123',
+                password=generate_password_hash('admin123'),
                 role='admin',
                 is_approved=True
             )

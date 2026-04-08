@@ -16,7 +16,7 @@
 
             <hr>
 
-            {% if not session.get('user_id') %}
+            {% if not current_user.is_authenticated %}
 
                 <h5 class="mb-3">Get Started</h5>
 
@@ -27,15 +27,15 @@
 
             {% else %}
 
-                {% if session.get('role') == 'admin' %}
+                {% if current_user.role == 'admin' %}
                     <h5 class="mb-3">Go to Admin Dashboard</h5>
                     <a href="/admin/dashboard" class="btn btn-success">Admin Dashboard</a>
 
-                {% elif session.get('role') == 'company' %}
+                {% elif current_user.role == 'company' %}
                     <h5 class="mb-3">Go to Company Dashboard</h5>
                     <a href="/company/dashboard" class="btn btn-success">Company Dashboard</a>
 
-                {% elif session.get('role') == 'student' %}
+                {% elif current_user.role == 'student' %}
                     <h5 class="mb-3">Go to Student Dashboard</h5>
                     <a href="/student/dashboard" class="btn btn-success">Student Dashboard</a>
 
