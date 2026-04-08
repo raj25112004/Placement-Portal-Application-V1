@@ -2,35 +2,52 @@
 
 {% block content %}
 
-<h2>Create Job</h2>
+<div class="row">
+    <div class="col-md-6 mx-auto">
 
-<div class="card">
+        <div class="card p-4 shadow-sm">
 
-<form method="POST">
+            <h3 class="text-center mb-3">Create Job</h3>
 
-    <label>Job Title:</label>
-    <input type="text" name="title" required>
+            <form method="POST">
 
-    <label>Description:</label>
-    <input type="text" name="description" required>
+                <div class="mb-3">
+                    <label class="form-label">Job Title</label>
+                    <input type="text" name="title" class="form-control" required>
+                </div>
 
-    <label>Skills Required:</label>
-    <input type="text" name="skills">
+                <div class="mb-3">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-control" rows="3" required></textarea>
+                </div>
 
-    <label>Salary Range:</label>
-    <input type="text" name="salary">
+                <div class="mb-3">
+                    <label class="form-label">Skills Required</label>
+                    <input type="text" name="skills" class="form-control">
+                </div>
 
-    <label>Job Type:</label>
-    <input type="text" name="job_type">
+                <div class="mb-3">
+                    <label class="form-label">Salary Range</label>
+                    <input type="text" name="salary" class="form-control">
+                </div>
 
-    <label>Location:</label>
-    <input type="text" name="location">
+                <div class="mb-3">
+                    <label class="form-label">Job Type</label>
+                    <input type="text" name="job_type" class="form-control">
+                </div>
 
-    <br>
-    <button type="submit">Create Job</button>
+                <div class="mb-3">
+                    <label class="form-label">Location</label>
+                    <input type="text" name="location" class="form-control">
+                </div>
 
-</form>
+                <button type="submit" class="btn btn-success w-100">Create Job</button>
 
+            </form>
+
+        </div>
+
+    </div>
 </div>
 
 {% endblock %}

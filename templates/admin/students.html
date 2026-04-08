@@ -2,29 +2,41 @@
 
 {% block content %}
 
-<h2>Students</h2>
+<h3 class="mb-3">Students</h3>
 
-<table>
-<tr>
-    <th>Name</th>
-    <th>Branch</th>
-    <th>CGPA</th>
-    <th>Action</th>
-</tr>
+<div class="card p-3 shadow-sm">
 
-{% for s in students %}
-<tr>
-    <td>{{ s.name }}</td>
-    <td>{{ s.branch }}</td>
-    <td>{{ s.cgpa }}</td>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
 
-    <td>
-        <a href="/admin/student/deactivate/{{ s.user_id }}" class="button-link">
-            Deactivate
-        </a>
-    </td>
-</tr>
-{% endfor %}
-</table>
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Branch</th>
+                    <th>CGPA</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for s in students %}
+                <tr>
+                    <td>{{ s.name }}</td>
+                    <td>{{ s.branch }}</td>
+                    <td>{{ s.cgpa }}</td>
+
+                    <td>
+                        <a href="/admin/student/deactivate/{{ s.user_id }}" class="btn btn-danger btn-sm">
+                            Deactivate
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
 
 {% endblock %}

@@ -2,43 +2,54 @@
 
 {% block content %}
 
-<h2>My Applications</h2>
+<h3 class="mb-4">My Applications</h3>
 
-<div class="card">
+<div class="card p-3 shadow-sm mb-4">
 
-<table>
-    <tr>
-        <th>Job Title</th>
-        <th>Status</th>
-        <th>Date</th>
-    </tr>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
 
-    {% for app in applications %}
-    <tr>
-        <td>{{ app.job.title }}</td>
+            <thead class="table-dark">
+                <tr>
+                    <th>Job Title</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
 
-        <td>
-            {% if app.status == "Selected" %}
-                <span class="status-approved">Selected</span>
-            {% elif app.status == "Rejected" %}
-                <span class="status-rejected">Rejected</span>
-            {% elif app.status == "Shortlisted" %}
-                <span class="status-approved">Shortlisted</span>
-            {% else %}
-                <span class="status-pending">{{ app.status }}</span>
-            {% endif %}
-        </td>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td>{{ app.job.title }}</td>
 
-        <td>{{ app.applied_at }}</td>
-    </tr>
-    {% endfor %}
-</table>
+                    <td>
+                        {% if app.status == "Selected" %}
+                            <span class="badge bg-success">Selected</span>
+                        {% elif app.status == "Rejected" %}
+                            <span class="badge bg-danger">Rejected</span>
+                        {% elif app.status == "Shortlisted" %}
+                            <span class="badge bg-primary">Shortlisted</span>
+                        {% elif app.status == "Interview" %}
+                            <span class="badge bg-warning text-dark">Interview</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ app.status }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td>{{ app.applied_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
 
 </div>
-<div class="card chart-card">
-    <h3>Application Status</h3>
 
-    <div class="chart-container">
+<div class="card p-4 shadow-sm text-center">
+    <h5 class="mb-3">Application Status</h5>
+
+    <div style="max-width: 500px; margin: auto;">
         <canvas id="studentChart"></canvas>
     </div>
 </div>

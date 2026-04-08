@@ -2,40 +2,54 @@
 
 {% block content %}
 
-<h2>Applications</h2>
+<h3 class="mb-3">Applications</h3>
 
-<div class="card">
+<div class="card p-3 shadow-sm">
 
-<table>
-    <tr>
-        <th>Student Name</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
 
-    {% for app in applications %}
-    <tr>
-        <td>{{ app.student.name }}</td>
+            <thead class="table-dark">
+                <tr>
+                    <th>Student Name</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
 
-        <td>
-            {% if app.status == "Selected" %}
-                <span class="status-approved">Selected</span>
-            {% elif app.status == "Rejected" %}
-                <span class="status-rejected">Rejected</span>
-            {% else %}
-                <span class="status-pending">{{ app.status }}</span>
-            {% endif %}
-        </td>
+            <tbody>
+                {% for app in applications %}
+                <tr>
+                    <td>{{ app.student.name }}</td>
 
-        <td>
-            <a href="/company/application/update/{{ app.id }}/Shortlisted" class="button-link">Shortlist</a>
-            <a href="/company/application/update/{{ app.id }}/Interview" class="button-link">Interview</a>
-            <a href="/company/application/update/{{ app.id }}/Selected" class="button-link">Select</a>
-            <a href="/company/application/update/{{ app.id }}/Rejected" class="button-link">Reject</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+                    <td>
+                        {% if app.status == "Selected" %}
+                            <span class="badge bg-success">Selected</span>
+                        {% elif app.status == "Rejected" %}
+                            <span class="badge bg-danger">Rejected</span>
+                        {% elif app.status == "Shortlisted" %}
+                            <span class="badge bg-primary">Shortlisted</span>
+                        {% elif app.status == "Interview" %}
+                            <span class="badge bg-warning text-dark">Interview</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ app.status }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="/company/application/update/{{ app.id }}/Shortlisted" class="btn btn-primary btn-sm">Shortlist</a>
+                            <a href="/company/application/update/{{ app.id }}/Interview" class="btn btn-warning btn-sm">Interview</a>
+                            <a href="/company/application/update/{{ app.id }}/Selected" class="btn btn-success btn-sm">Select</a>
+                            <a href="/company/application/update/{{ app.id }}/Rejected" class="btn btn-danger btn-sm">Reject</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
 
 </div>
 

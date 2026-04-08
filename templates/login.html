@@ -2,27 +2,37 @@
 
 {% block content %}
 
-<div class="card">
+<div class="row">
+    <div class="col-md-5 mx-auto">
 
-    <h2>Login</h2>
+        <div class="card p-4 shadow-sm">
 
-    <form method="POST" onsubmit="return validateLogin()">
+            <h3 class="text-center mb-3">Login</h3>
 
-        <label>Email:</label>
-        <input type="email" name="email" required>
+            <form method="POST" onsubmit="return validateLogin()">
 
-        <label>Password:</label>
-        <input type="password" name="password" required minlength="6">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
 
-        <button type="submit">Login</button>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required minlength="6">
+                </div>
 
-    </form>
+                <button type="submit" class="btn btn-success w-100">Login</button>
 
-    <br>
+            </form>
 
-    <p>Don't have an account?</p>
-    <a href="/register" class="button-link">Register</a>
+            <div class="text-center mt-3">
+                <p>Don't have an account?</p>
+                <a href="/register" class="btn btn-outline-primary">Register</a>
+            </div>
 
+        </div>
+
+    </div>
 </div>
 
 <script>

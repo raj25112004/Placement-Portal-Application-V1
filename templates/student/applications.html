@@ -1,42 +1,46 @@
-<h2>My Applications</h2>
-
 {% extends 'base.html' %}
 
 {% block content %}
 
-<h2>Student Dashboard</h2>
+<h3 class="mb-4">Student Dashboard</h3>
 
-<div class="card">
+<div class="card p-3 shadow-sm mb-4">
 
-    <h3>Available Jobs</h3>
+    <h5 class="mb-3">Available Jobs</h5>
 
-    <table>
-        <tr>
-            <th>Job Title</th>
-            <th>Company</th>
-            <th>Action</th>
-        </tr>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
 
-        {% for job in jobs %}
-        <tr>
-            <td>{{ job.title }}</td>
-            <td>{{ job.company.company_name }}</td>
+            <thead class="table-dark">
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
 
-            <td>
-                <a href="/student/apply/{{ job.id }}" class="button-link">
-                    Apply
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td>{{ job.title }}</td>
+                    <td>{{ job.company.company_name }}</td>
+
+                    <td>
+                        <a href="/student/apply/{{ job.id }}" class="btn btn-primary btn-sm">
+                            Apply
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
 
 </div>
 
-<br>
-
-<div class="card">
-    <a href="/student/applications" class="button-link">
+<div class="card p-3 shadow-sm text-center">
+    <a href="/student/applications" class="btn btn-success">
         View My Applications
     </a>
 </div>

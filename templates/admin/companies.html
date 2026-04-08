@@ -2,36 +2,48 @@
 
 {% block content %}
 
-<h2>Companies</h2>
+<h3 class="mb-3">Companies</h3>
 
-<table>
-<tr>
-    <th>Name</th>
-    <th>Industry</th>
-    <th>Status</th>
-    <th>Action</th>
-</tr>
+<div class="card p-3 shadow-sm">
 
-{% for c in companies %}
-<tr>
-    <td>{{ c.company_name }}</td>
-    <td>{{ c.industry }}</td>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
 
-    <td>
-        {% if c.user.is_approved %}
-            <span class="status-approved">Approved</span>
-        {% else %}
-            <span class="status-pending">Pending</span>
-        {% endif %}
-    </td>
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Industry</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
 
-    <td>
-        <a href="/admin/company/approve/{{ c.user_id }}" class="button-link">Approve</a>
-        <a href="/admin/company/reject/{{ c.user_id }}" class="button-link">Reject</a>
-        <a href="/admin/company/deactivate/{{ c.user_id }}" class="button-link">Deactivate</a>
-    </td>
-</tr>
-{% endfor %}
-</table>
+            <tbody>
+                {% for c in companies %}
+                <tr>
+                    <td>{{ c.company_name }}</td>
+                    <td>{{ c.industry }}</td>
+
+                    <td>
+                        {% if c.user.is_approved %}
+                            <span class="badge bg-success">Approved</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <a href="/admin/company/approve/{{ c.user_id }}" class="btn btn-success btn-sm">Approve</a>
+                        <a href="/admin/company/reject/{{ c.user_id }}" class="btn btn-danger btn-sm">Reject</a>
+                        <a href="/admin/company/deactivate/{{ c.user_id }}" class="btn btn-secondary btn-sm">Deactivate</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
+    </div>
+
+</div>
 
 {% endblock %}

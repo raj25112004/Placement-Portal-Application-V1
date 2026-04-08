@@ -2,41 +2,50 @@
 
 {% block content %}
 
-<div class="card">
+<div class="row">
+    <div class="col-md-6 mx-auto text-center">
 
-    <h2>Welcome to Placement Portal</h2>
+        <div class="card p-4 shadow-sm">
 
-    <p>
-        This platform helps students find jobs, companies hire talent,
-        and administrators manage the placement process efficiently.
-    </p>
+            <h2 class="mb-3">Welcome to Placement Portal 🚀</h2>
 
-    <hr>
+            <p>
+                This platform helps students find jobs, companies hire talent,
+                and administrators manage the placement process efficiently.
+            </p>
 
-    {% if not session.get('user_id') %}
-        <h3>Get Started</h3>
+            <hr>
 
-        <a href="/login" class="button-link">Login</a>
-        <a href="/register" class="button-link">Register</a>
+            {% if not session.get('user_id') %}
 
-    {% else %}
+                <h5 class="mb-3">Get Started</h5>
 
-        {% if session.get('role') == 'admin' %}
-            <h3>Go to Admin Dashboard</h3>
-            <a href="/admin/dashboard" class="button-link">Admin Dashboard</a>
+                <div class="d-grid gap-2">
+                    <a href="/login" class="btn btn-success">Login</a>
+                    <a href="/register" class="btn btn-outline-primary">Register</a>
+                </div>
 
-        {% elif session.get('role') == 'company' %}
-            <h3>Go to Company Dashboard</h3>
-            <a href="/company/dashboard" class="button-link">Company Dashboard</a>
+            {% else %}
 
-        {% elif session.get('role') == 'student' %}
-            <h3>Go to Student Dashboard</h3>
-            <a href="/student/dashboard" class="button-link">Student Dashboard</a>
+                {% if session.get('role') == 'admin' %}
+                    <h5 class="mb-3">Go to Admin Dashboard</h5>
+                    <a href="/admin/dashboard" class="btn btn-success">Admin Dashboard</a>
 
-        {% endif %}
+                {% elif session.get('role') == 'company' %}
+                    <h5 class="mb-3">Go to Company Dashboard</h5>
+                    <a href="/company/dashboard" class="btn btn-success">Company Dashboard</a>
 
-    {% endif %}
+                {% elif session.get('role') == 'student' %}
+                    <h5 class="mb-3">Go to Student Dashboard</h5>
+                    <a href="/student/dashboard" class="btn btn-success">Student Dashboard</a>
 
+                {% endif %}
+
+            {% endif %}
+
+        </div>
+
+    </div>
 </div>
 
 {% endblock %}

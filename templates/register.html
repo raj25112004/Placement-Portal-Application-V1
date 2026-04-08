@@ -2,64 +2,88 @@
 
 {% block content %}
 
-<div class="card">
+<div class="row">
+    <div class="col-md-6 mx-auto">
 
-    <h2>Register</h2>
+        <div class="card p-4 shadow-sm">
 
-    <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <h3 class="text-center mb-3">Register</h3>
 
-        <label>Name:</label>
-        <input type="text" name="name" required>
+            <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
 
-        <label>Email:</label>
-        <input type="email" name="email" required>
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
 
-        <label>Password:</label>
-        <input type="password" name="password" required minlength="6">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
 
-        <label>Role:</label>
-        <select name="role" required>
-            <option value="student">Student</option>
-            <option value="company">Company</option>
-        </select>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required minlength="6">
+                </div>
 
-        <hr>
+                <div class="mb-3">
+                    <label class="form-label">Role</label>
+                    <select name="role" class="form-select" required>
+                        <option value="student">Student</option>
+                        <option value="company">Company</option>
+                    </select>
+                </div>
 
-        <h3>Student Details</h3>
+                <hr>
 
-        <label>Branch:</label>
-        <input type="text" name="branch">
+                <h5 class="mb-2">Student Details</h5>
 
-        <label>Year of Passing:</label>
-        <input type="number" name="year" min="2000" max="2100">
+                <div class="mb-3">
+                    <label class="form-label">Branch</label>
+                    <input type="text" name="branch" class="form-control">
+                </div>
 
-        <label>CGPA:</label>
-        <input type="number" name="cgpa" step="0.01" min="0" max="10">
+                <div class="mb-3">
+                    <label class="form-label">Year of Passing</label>
+                    <input type="number" name="year" class="form-control" min="2000" max="2100">
+                </div>
 
-        <label>Resume:</label>
-        <input type="file" name="resume" accept=".pdf,.doc,.docx">
+                <div class="mb-3">
+                    <label class="form-label">CGPA</label>
+                    <input type="number" name="cgpa" class="form-control" step="0.01" min="0" max="10">
+                </div>
 
-        <hr>
+                <div class="mb-3">
+                    <label class="form-label">Resume</label>
+                    <input type="file" name="resume" class="form-control" accept=".pdf,.doc,.docx">
+                </div>
 
-        <h3>Company Details</h3>
+                <hr>
 
-        <label>Company Name:</label>
-        <input type="text" name="company_name">
+                <h5 class="mb-2">Company Details</h5>
 
-        <label>Industry:</label>
-        <input type="text" name="industry">
+                <div class="mb-3">
+                    <label class="form-label">Company Name</label>
+                    <input type="text" name="company_name" class="form-control">
+                </div>
 
-        <br>
+                <div class="mb-3">
+                    <label class="form-label">Industry</label>
+                    <input type="text" name="industry" class="form-control">
+                </div>
 
-        <button type="submit">Register</button>
+                <button type="submit" class="btn btn-success w-100">Register</button>
 
-    </form>
+            </form>
 
-    <br>
+            <div class="text-center mt-3">
+                <p>Already have an account?</p>
+                <a href="/login" class="btn btn-outline-primary">Login</a>
+            </div>
 
-    <p>Already have an account?</p>
-    <a href="/login" class="button-link">Login</a>
+        </div>
 
+    </div>
 </div>
 
 <script>
