@@ -35,8 +35,12 @@
 </table>
 
 </div>
-<div class="card">
-    <canvas id="studentChart"></canvas>
+<div class="card chart-card">
+    <h3>Application Status</h3>
+
+    <div class="chart-container">
+        <canvas id="studentChart"></canvas>
+    </div>
 </div>
 
 <script>
@@ -46,11 +50,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const data = JSON.parse('{{ status_data.values() | list | tojson }}');
 
     new Chart(document.getElementById('studentChart'), {
-        type: 'pie',
+        type: 'doughnut',
         data: {
             labels: labels,
             datasets: [{
-                data: data
+                data: data,
+                backgroundColor: [
+                    '#3498db',
+                    '#f1c40f',
+                    '#2ecc71',
+                    '#e74c3c'
+                ]
             }]
         }
     });

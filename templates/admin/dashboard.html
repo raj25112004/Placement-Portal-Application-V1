@@ -16,23 +16,43 @@
     <a href="/admin/jobs" class="button-link">Manage Jobs</a>
     <a href="/admin/students" class="button-link">View Students</a>
 </div>
-<div class="card">
-    <canvas id="adminChart"></canvas>
+<div class="card chart-card">
+    <h3>System Overview</h3>
+
+    <div class="chart-container">
+        <canvas id="adminChart"></canvas>
+    </div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    const chartData = JSON.parse('{{ [jobs, applications, placements] | tojson }}');
+    const data = JSON.parse('{{ [jobs, applications, placements] | tojson }}');
 
     new Chart(document.getElementById('adminChart'), {
         type: 'bar',
         data: {
             labels: ['Jobs', 'Applications', 'Placements'],
             datasets: [{
-                label: 'System Overview',
-                data: chartData
+                label: 'Count',
+                data: data,
+                backgroundColor: [
+                    '#3498db',
+                    '#f39c12',
+                    '#2ecc71'
+                ],
+                borderRadius: 8
             }]
+        },
+        options: {
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
         }
     });
 

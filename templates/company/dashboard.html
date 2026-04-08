@@ -39,8 +39,12 @@
         {% endfor %}
     </table>
 </div>
-<div class="card">
-    <canvas id="companyChart"></canvas>
+<div class="card chart-card">
+    <h3>Applications per Job</h3>
+
+    <div class="chart-container">
+        <canvas id="companyChart"></canvas>
+    </div>
 </div>
 
 <script>
@@ -54,9 +58,16 @@ document.addEventListener("DOMContentLoaded", function () {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Applications per Job',
-                data: data
+                label: 'Applications',
+                data: data,
+                backgroundColor: '#9b59b6',
+                borderRadius: 8
             }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
         }
     });
 

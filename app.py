@@ -127,27 +127,33 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+
         email = request.form.get('email')
         password = request.form.get('password')
+
+        if not email or not password:
+            return "All fields are required"
+
+        if '@' not in email:
+            return "Invalid email format"
+
+        if len(password) < 6:
+            return "Password must be at least 6 characters"
 
         user = User.query.filter_by(email=email).first()
 
         if not user:
             return "No user found"
 
-        # Correct password check
         if not check_password_hash(user.password, password):
             return "Incorrect password"
 
-        # Company approval check
         if user.role == 'company' and not user.is_approved:
             return "Company registration pending approval"
 
-        # Session set
         session['user_id'] = user.id
         session['role'] = user.role
 
-        # Role-based redirect
         if user.role == 'admin':
             return redirect(url_for('admin_dashboard'))
 
@@ -169,23 +175,31 @@ def register():
         email = request.form.get('email')
         password = request.form.get('password')
 
-        # Check existing user
+        if not name or not email or not password or not role:
+            return "All fields are required"
+
+        if '@' not in email:
+            return "Invalid email format"
+
+        if len(password) < 6:
+            return "Password must be at least 6 characters"
+
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             return "User already exists"
 
-        # Hash password
         hashed_password = generate_password_hash(password)
 
-        # Handle resume upload
         resume = request.files.get('resume')
         filename = None
 
         if resume and resume.filename != "":
+            if not (resume.filename.endswith('.pdf') or resume.filename.endswith('.doc') or resume.filename.endswith('.docx')):
+                return "Invalid file type"
+
             filename = resume.filename
             resume.save("static/resumes/" + filename)
 
-        # Create user
         new_user = User(
             username=name,
             email=email,
@@ -197,22 +211,34 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        # Create profile based on role
         if role == 'student':
+
+            cgpa = request.form.get('cgpa')
+            year = request.form.get('year')
+
+            if cgpa and (float(cgpa) < 0 or float(cgpa) > 10):
+                return "Invalid CGPA"
+
             student = StudentProfile(
                 user_id=new_user.id,
                 name=name,
                 branch=request.form.get('branch'),
-                year_of_passing=request.form.get('year'),
-                cgpa=request.form.get('cgpa'),
-                resume_link=filename   # 👈 important
+                year_of_passing=year,
+                cgpa=cgpa,
+                resume_link=filename
             )
             db.session.add(student)
 
         elif role == 'company':
+
+            company_name = request.form.get('company_name')
+
+            if not company_name:
+                return "Company name required"
+
             company = CompanyProfile(
                 user_id=new_user.id,
-                company_name=request.form.get('company_name'),
+                company_name=company_name,
                 industry=request.form.get('industry')
             )
             db.session.add(company)
@@ -365,14 +391,15 @@ def deactivate_company(user_id):
 
 @app.route('/company/job/create', methods=['GET', 'POST'])
 def create_job():
-    # Check login + role
+
     if 'user_id' not in session or session.get('role') != 'company':
         return redirect(url_for('login'))
 
-    # Get company
     company = CompanyProfile.query.filter_by(user_id=session['user_id']).first()
 
-    #Only approved company can create jobs
+    if not company:
+        return "Invalid company"
+
     if not company.user.is_approved:
         return "Company not approved by admin"
 
@@ -380,20 +407,31 @@ def create_job():
 
         title = request.form.get('title')
         description = request.form.get('description')
+        skills = request.form.get('skills')
+        salary = request.form.get('salary')
+        job_type = request.form.get('job_type')
+        location = request.form.get('location')
 
-        # Basic validation
         if not title or not description:
             return "Title and Description are required"
+
+        if len(title) < 3:
+            return "Job title too short"
+
+        if len(description) < 10:
+            return "Description too short"
+
+        if salary and not salary.replace('-', '').replace(' ', '').isdigit():
+            return "Invalid salary format"
 
         job = Job(
             company_id=company.id,
             title=title,
             description=description,
-            skills_required=request.form.get('skills'),
-            salary_range=request.form.get('salary'),
-            job_type=request.form.get('job_type'),
-            location=request.form.get('location'),
-
+            skills_required=skills,
+            salary_range=salary,
+            job_type=job_type,
+            location=location,
             is_approved=False
         )
 
@@ -403,6 +441,7 @@ def create_job():
         return redirect(url_for('company_dashboard'))
 
     return render_template('company/create_job.html')
+
 
 @app.route('/company/job/applications/<int:job_id>')
 def view_applications(job_id):
@@ -484,12 +523,23 @@ def search_jobs():
 
 @app.route('/student/apply/<int:job_id>')
 def apply_job(job_id):
-    if session.get('role') != 'student':
+
+    if 'user_id' not in session or session.get('role') != 'student':
         return redirect(url_for('login'))
 
     student = StudentProfile.query.filter_by(user_id=session['user_id']).first()
 
-    # Prevent duplicate (already added constraint but still safe)
+    if not student:
+        return "Invalid student"
+
+    job = Job.query.get(job_id)
+
+    if not job:
+        return "Job not found"
+
+    if not job.is_approved:
+        return "Job not approved yet"
+
     existing = Application.query.filter_by(
         job_id=job_id,
         student_id=student.id

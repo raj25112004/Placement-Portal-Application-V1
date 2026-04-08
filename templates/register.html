@@ -6,9 +6,8 @@
 
     <h2>Register</h2>
 
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
 
-        <!-- Basic Info -->
         <label>Name:</label>
         <input type="text" name="name" required>
 
@@ -16,9 +15,8 @@
         <input type="email" name="email" required>
 
         <label>Password:</label>
-        <input type="password" name="password" required>
+        <input type="password" name="password" required minlength="6">
 
-        <!-- Role -->
         <label>Role:</label>
         <select name="role" required>
             <option value="student">Student</option>
@@ -27,24 +25,22 @@
 
         <hr>
 
-        <!-- Student Section -->
         <h3>Student Details</h3>
 
         <label>Branch:</label>
         <input type="text" name="branch">
 
         <label>Year of Passing:</label>
-        <input type="number" name="year">
+        <input type="number" name="year" min="2000" max="2100">
 
         <label>CGPA:</label>
-        <input type="text" name="cgpa">
+        <input type="number" name="cgpa" step="0.01" min="0" max="10">
 
         <label>Resume:</label>
-        <input type="file" name="resume">
+        <input type="file" name="resume" accept=".pdf,.doc,.docx">
 
         <hr>
 
-        <!-- Company Section -->
         <h3>Company Details</h3>
 
         <label>Company Name:</label>
@@ -65,5 +61,30 @@
     <a href="/login" class="button-link">Login</a>
 
 </div>
+
+<script>
+function validateForm() {
+    var email = document.querySelector('input[name="email"]').value;
+    var password = document.querySelector('input[name="password"]').value;
+    var cgpa = document.querySelector('input[name="cgpa"]').value;
+
+    if (!email.includes("@")) {
+        alert("Invalid email");
+        return false;
+    }
+
+    if (password.length < 6) {
+        alert("Password must be at least 6 characters");
+        return false;
+    }
+
+    if (cgpa && (cgpa < 0 || cgpa > 10)) {
+        alert("CGPA must be between 0 and 10");
+        return false;
+    }
+
+    return true;
+}
+</script>
 
 {% endblock %}

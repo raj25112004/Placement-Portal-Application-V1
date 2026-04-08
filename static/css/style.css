@@ -1,0 +1,137 @@
+/* 🔹 Body */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #eef2f5;
+    margin: 0;
+}
+
+/* 🔹 Navbar */
+nav {
+    background: linear-gradient(90deg, #2c3e50, #34495e);
+    padding: 12px 25px;
+    display: flex;
+    align-items: center;
+}
+
+nav a {
+    color: #ecf0f1;
+    margin-right: 20px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #1abc9c;
+}
+
+/* 🔹 Container */
+.container {
+    padding: 25px;
+}
+
+/* 🔹 Card */
+.card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* 🔹 Headings */
+h2 {
+    margin-bottom: 10px;
+}
+
+/* 🔹 Buttons */
+.button-link {
+    background: linear-gradient(45deg, #1abc9c, #16a085);
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-right: 10px;
+    display: inline-block;
+    transition: 0.3s;
+}
+
+.button-link:hover {
+    background: linear-gradient(45deg, #16a085, #138d75);
+}
+
+/* 🔹 Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th {
+    background: #34495e;
+    color: white;
+    padding: 12px;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* 🔹 Status Colors */
+.status-approved {
+    color: green;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: orange;
+    font-weight: bold;
+}
+
+.status-rejected {
+    color: red;
+    font-weight: bold;
+}
+
+/* 🔹 Forms */
+form {
+    max-width: 400px;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+}
+
+/* 🔹 Center Welcome Box */
+.card h2 {
+    color: #2c3e50;
+}
+
+/* 🔹 Chart Container */
+.chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+}
+
+/* 🔹 Chart Card Special */
+.chart-card {
+    padding: 25px;
+    text-align: center;
+}
+
+/* 🔹 Canvas fix */
+canvas {
+    max-height: 300px;
+}
