@@ -4,14 +4,14 @@
 
 <h3 class="mb-4">Student Dashboard</h3>
 
-<div class="card p-3 shadow-sm mb-4">
+<div class="card border-0 shadow-sm mb-4 overflow-hidden">
 
-    <h5 class="mb-3">Available Jobs</h5>
+    <h5 class="card-header bg-white py-3 fw-bold">Available Jobs</h5>
 
     <div class="table-responsive">
-        <table class="table table-bordered table-hover align-middle">
+        <table class="table table-hover align-middle mb-0">
 
-            <thead class="table-dark">
+            <thead class="bg-light">
                 <tr>
                     <th>Job Title</th>
                     <th>Company</th>
@@ -26,8 +26,8 @@
                     <td>{{ job.company.company_name }}</td>
 
                     <td>
-                        <a href="/student/apply/{{ job.id }}" class="btn btn-primary btn-sm">
-                            Apply
+                        <a href="/student/apply/{{ job.id }}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm">
+                            <i class="bi bi-send me-1"></i> Apply
                         </a>
                     </td>
                 </tr>
@@ -39,9 +39,9 @@
 
 </div>
 
-<div class="card p-3 shadow-sm text-center">
-    <a href="/student/applications" class="btn btn-success">
-        View My Applications
+<div class="text-center">
+    <a href="/student/applications" class="btn btn-success btn-lg rounded-pill px-5 shadow-sm">
+        <i class="bi bi-view-list me-2"></i> View My Applications
     </a>
 </div>
 

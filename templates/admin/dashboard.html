@@ -1,51 +1,81 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    .stat-card { 
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1); 
+        border: none; 
+        overflow: hidden;
+        position: relative;
+        border-radius: 20px;
+        color: white !important;
+    }
+    .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%);
+        z-index: 1;
+    }
+    .stat-card > * { position: relative; z-index: 2; }
+    .stat-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important; }
+    .stat-card i { position: absolute; right: -15px; bottom: -15px; font-size: 6rem; opacity: 0.2; z-index: 0; transition: 0.3s; }
+    .stat-card:hover i { transform: scale(1.1) rotate(-5deg); opacity: 0.3; }
 
-<h3 class="mb-4">Admin Dashboard</h3>
+    .card-students { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%) !important; }
+    .card-companies { background: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%) !important; }
+    .card-jobs { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important; }
+    .card-applications { background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important; }
+
+    .btn-action { border-radius: 10px; padding: 12px 20px; font-weight: 500; }
+</style>
+
+<h3 class="mb-4 fw-bold text-dark">Admin Dashboard</h3>
 
 <div class="row">
-
     <div class="col-md-3">
-        <div class="card text-center shadow-sm p-3 mb-3">
-            <h6>Total Students</h6>
-            <h4>{{ students }}</h4>
+        <div class="card text-center p-4 mb-4 stat-card card-students border-0 shadow-sm">
+            <i class="bi bi-people"></i>
+            <h6 class="text-uppercase small fw-bold opacity-75">Total Students</h6>
+            <h2 class="display-6 fw-bold mb-0">{{ students }}</h2>
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="card text-center shadow-sm p-3 mb-3">
-            <h6>Total Companies</h6>
-            <h4>{{ companies }}</h4>
+        <div class="card text-center p-4 mb-4 stat-card card-companies border-0 shadow-sm">
+            <i class="bi bi-building"></i>
+            <h6 class="text-uppercase small fw-bold opacity-75">Total Companies</h6>
+            <h2 class="display-6 fw-bold mb-0">{{ companies }}</h2>
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="card text-center shadow-sm p-3 mb-3">
-            <h6>Total Jobs</h6>
-            <h4>{{ jobs }}</h4>
+        <div class="card text-center p-4 mb-4 stat-card card-jobs border-0 shadow-sm">
+            <i class="bi bi-briefcase"></i>
+            <h6 class="text-uppercase small fw-bold opacity-75">Total Jobs</h6>
+            <h2 class="display-6 fw-bold mb-0">{{ jobs }}</h2>
         </div>
     </div>
 
     <div class="col-md-3">
-        <div class="card text-center shadow-sm p-3 mb-3">
-            <h6>Total Applications</h6>
-            <h4>{{ applications }}</h4>
+        <div class="card text-center p-4 mb-4 stat-card card-applications border-0 shadow-sm">
+            <i class="bi bi-file-earmark-check"></i>
+            <h6 class="text-uppercase small fw-bold opacity-75">Total Applications</h6>
+            <h2 class="display-6 fw-bold mb-0">{{ applications }}</h2>
         </div>
     </div>
-
 </div>
 
-<div class="card p-3 shadow-sm mb-4">
+<div class="card p-4 border-0 shadow-sm mb-4 bg-light">
     <div class="d-flex gap-2 flex-wrap">
-        <a href="/admin/companies" class="btn btn-primary">Manage Companies</a>
-        <a href="/admin/jobs" class="btn btn-warning">Manage Jobs</a>
-        <a href="/admin/students" class="btn btn-success">View Students</a>
+        <a href="/admin/companies" class="btn btn-primary btn-action shadow-sm">Manage Companies</a>
+        <a href="/admin/jobs" class="btn btn-warning btn-action shadow-sm">Manage Jobs</a>
+        <a href="/admin/students" class="btn btn-success btn-action shadow-sm">View Students</a>
     </div>
 </div>
 
-<div class="card p-4 shadow-sm text-center">
-    <h5 class="mb-3">System Overview</h5>
+<div class="card p-4 border-0 shadow-sm text-center">
+    <h5 class="mb-4 fw-bold">System Overview</h5>
 
     <div style="max-width: 600px; margin: auto;">
         <canvas id="adminChart"></canvas>
@@ -64,9 +94,9 @@ document.addEventListener("DOMContentLoaded", function () {
             datasets: [{
                 data: data,
                 backgroundColor: [
-                    '#3498db',
-                    '#f39c12',
-                    '#2ecc71'
+                    '#4f46e5',
+                    '#f59e0b',
+                    '#10b981'
                 ],
                 borderRadius: 8
             }]

@@ -4,12 +4,12 @@
 
 <h3 class="mb-3">Applications</h3>
 
-<div class="card p-3 shadow-sm">
+<div class="card border-0 shadow-sm overflow-hidden">
 
     <div class="table-responsive">
-        <table class="table table-bordered table-hover align-middle">
+        <table class="table table-hover align-middle mb-0">
 
-            <thead class="table-dark">
+            <thead class="bg-light border-bottom">
                 <tr>
                     <th>Student Name</th>
                     <th>Status</th>
@@ -24,24 +24,24 @@
 
                     <td>
                         {% if app.status == "Selected" %}
-                            <span class="badge bg-success">Selected</span>
+                            <span class="badge rounded-pill bg-success px-3">Selected</span>
                         {% elif app.status == "Rejected" %}
-                            <span class="badge bg-danger">Rejected</span>
+                            <span class="badge rounded-pill bg-danger px-3">Rejected</span>
                         {% elif app.status == "Shortlisted" %}
-                            <span class="badge bg-primary">Shortlisted</span>
+                            <span class="badge rounded-pill bg-primary px-3">Shortlisted</span>
                         {% elif app.status == "Interview" %}
-                            <span class="badge bg-warning text-dark">Interview</span>
+                            <span class="badge rounded-pill bg-warning text-dark px-3">Interview</span>
                         {% else %}
-                            <span class="badge bg-secondary">{{ app.status }}</span>
+                            <span class="badge rounded-pill bg-secondary px-3">{{ app.status }}</span>
                         {% endif %}
                     </td>
 
                     <td>
                         <div class="d-flex flex-wrap gap-2">
-                            <a href="/company/application/update/{{ app.id }}/Shortlisted" class="btn btn-primary btn-sm">Shortlist</a>
-                            <a href="/company/application/update/{{ app.id }}/Interview" class="btn btn-warning btn-sm">Interview</a>
-                            <a href="/company/application/update/{{ app.id }}/Selected" class="btn btn-success btn-sm">Select</a>
-                            <a href="/company/application/update/{{ app.id }}/Rejected" class="btn btn-danger btn-sm">Reject</a>
+                            <a href="/company/application/update/{{ app.id }}/Shortlisted" class="btn btn-outline-primary btn-sm rounded-pill">Shortlist</a>
+                            <a href="/company/application/update/{{ app.id }}/Interview" class="btn btn-outline-warning btn-sm rounded-pill text-dark">Interview</a>
+                            <a href="/company/application/update/{{ app.id }}/Selected" class="btn btn-outline-success btn-sm rounded-pill">Select</a>
+                            <a href="/company/application/update/{{ app.id }}/Rejected" class="btn btn-outline-danger btn-sm rounded-pill">Reject</a>
                         </div>
                     </td>
                 </tr>

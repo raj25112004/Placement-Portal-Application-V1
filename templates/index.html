@@ -3,41 +3,63 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-md-6 mx-auto text-center">
+    <div class="col-md-10 mx-auto text-center py-5">
 
-        <div class="card p-4 shadow-sm">
+        <div class="card p-5 border-0 shadow-lg">
 
-            <h2 class="mb-3">Welcome to Placement Portal 🚀</h2>
+            <h1 class="display-3 fw-bold mb-4" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Bridge the Gap to Success 🚀</h1>
 
-            <p>
-                This platform helps students find jobs, companies hire talent,
-                and administrators manage the placement process efficiently.
+            <p class="lead text-dark fw-medium mb-5">
+                The unified ecosystem for seamless recruitment, talent discovery, 
+                and placement management.
             </p>
 
-            <hr>
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="p-3 border rounded-3 bg-white shadow-sm">
+                        <i class="bi bi-rocket-takeoff fs-2" style="color: var(--primary);"></i>
+                        <h6 class="mt-2 fw-bold">Speed</h6>
+                        <p class="small text-muted mb-0">Fast application tracking</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded-3 bg-white shadow-sm">
+                        <i class="bi bi-shield-check fs-2" style="color: var(--success);"></i>
+                        <h6 class="mt-2 fw-bold">Verified</h6>
+                        <p class="small text-muted mb-0">Approved companies only</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded-3 bg-white shadow-sm">
+                        <i class="bi bi-graph-up-arrow fs-2" style="color: var(--info);"></i>
+                        <h6 class="mt-2 fw-bold">Growth</h6>
+                        <p class="small text-muted mb-0">Real-time analytics</p>
+                    </div>
+                </div>
+            </div>
 
             {% if not current_user.is_authenticated %}
 
-                <h5 class="mb-3">Get Started</h5>
+                <h5 class="mb-4 fw-bold">Get Started Today</h5>
 
-                <div class="d-grid gap-2">
-                    <a href="/login" class="btn btn-success">Login</a>
-                    <a href="/register" class="btn btn-outline-primary">Register</a>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/login" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">Login</a>
+                    <a href="/register" class="btn btn-outline-primary btn-lg px-5 rounded-pill">Register</a>
                 </div>
 
             {% else %}
 
                 {% if current_user.role == 'admin' %}
-                    <h5 class="mb-3">Go to Admin Dashboard</h5>
-                    <a href="/admin/dashboard" class="btn btn-success">Admin Dashboard</a>
+                    <h5 class="mb-3">Welcome back, Administrator</h5>
+                    <a href="/admin/dashboard" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm">Go to Dashboard</a>
 
                 {% elif current_user.role == 'company' %}
-                    <h5 class="mb-3">Go to Company Dashboard</h5>
-                    <a href="/company/dashboard" class="btn btn-success">Company Dashboard</a>
+                    <h5 class="mb-3 text-muted">Manage your recruitment portal</h5>
+                    <a href="/company/dashboard" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">Go to Dashboard</a>
 
                 {% elif current_user.role == 'student' %}
-                    <h5 class="mb-3">Go to Student Dashboard</h5>
-                    <a href="/student/dashboard" class="btn btn-success">Student Dashboard</a>
+                    <h5 class="mb-3 text-muted">Ready for your next opportunity?</h5>
+                    <a href="/student/dashboard" class="btn btn-success btn-lg px-5 rounded-pill shadow-sm">Go to Dashboard</a>
 
                 {% endif %}
 

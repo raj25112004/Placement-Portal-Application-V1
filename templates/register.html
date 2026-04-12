@@ -5,9 +5,9 @@
 <div class="row">
     <div class="col-md-6 mx-auto">
 
-        <div class="card p-4 shadow-sm">
+        <div class="card p-4 shadow border-0 mb-5">
 
-            <h3 class="text-center mb-3">Register</h3>
+            <h3 class="text-center mb-4 fw-bold">Create Your Account</h3>
 
             <form method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
 
@@ -34,9 +34,9 @@
                     </select>
                 </div>
 
-                <hr>
+                <hr class="my-4">
 
-                <h5 class="mb-2">Student Details</h5>
+                <h5 class="mb-3 text-primary"><i class="bi bi-person-badge me-2"></i>Student Details</h5>
 
                 <div class="mb-3">
                     <label class="form-label">Branch</label>
@@ -58,9 +58,9 @@
                     <input type="file" name="resume" class="form-control" accept=".pdf,.doc,.docx">
                 </div>
 
-                <hr>
+                <hr class="my-4">
 
-                <h5 class="mb-2">Company Details</h5>
+                <h5 class="mb-3 text-primary"><i class="bi bi-building me-2"></i>Company Details</h5>
 
                 <div class="mb-3">
                     <label class="form-label">Company Name</label>
@@ -72,13 +72,13 @@
                     <input type="text" name="industry" class="form-control">
                 </div>
 
-                <button type="submit" class="btn btn-success w-100">Register</button>
+                <button type="submit" class="btn btn-success w-100 py-2 fw-bold rounded-pill shadow-sm mt-3">Register</button>
 
             </form>
 
-            <div class="text-center mt-3">
-                <p>Already have an account?</p>
-                <a href="/login" class="btn btn-outline-primary">Login</a>
+            <div class="text-center mt-4">
+                <p class="small text-muted mb-2">Already have an account?</p>
+                <a href="/login" class="btn btn-outline-primary btn-sm rounded-pill px-4">Login</a>
             </div>
 
         </div>
